@@ -1,73 +1,71 @@
-# Welcome to your Lovable project
 
-## Project info
+# Proyecto PHP: Sistema de autenticación y sistema de ventas
 
-**URL**: https://lovable.dev/projects/4c95b6a3-97dd-4e5d-a685-0dfd502f7411
+## Estructura
 
-## How can I edit this code?
+- `auth_system/` — Registro/Login/Logout de usuarios, guarda usuarios en MySQL.
+- `sales_system/` — Sistema de ventas modular, estructura MVC por módulo.
+- `db_init.sql` — Script para crear las tablas en MySQL.
 
-There are several ways of editing your application.
+## Cómo levantar los servidores PHP embebidos
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/4c95b6a3-97dd-4e5d-a685-0dfd502f7411) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Abre dos terminales en la carpeta raíz del proyecto y ejecuta:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Terminal 1: Auth system en puerto 8001
+cd auth_system
+php -S localhost:8001
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Terminal 2: Sales system en puerto 8000
+cd ../sales_system
+php -S localhost:8000
 ```
 
-**Edit a file directly in GitHub**
+## Configuración base de datos
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+1. Crea la base de datos y tablas ejecutando el SQL:
+    ```
+    mysql -u root -p < db_init.sql
+    ```
 
-**Use GitHub Codespaces**
+2. Asegúrate de que las credenciales en `config.php` sean correctas.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## ¿Cómo se mantiene la sesión entre ambos sistemas?
 
-This project is built with:
+Ambos sistemas usan el mismo `session_name` ('auth_session') y están en el mismo dominio (`localhost`):
+- El sistema de autenticación, tras validar el usuario, pone en la sesión `$_SESSION["user_id"]`.
+- Al acceder al sistema de ventas, este mide si existe `$_SESSION["user_id"]` antes de mostrar cualquier página.
+- Si el usuario no está autenticado, se redirige al login.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Esto funciona porque ambas apps comparten el mismo dominio y session_name: el navegador envía automáticamente la cookie de sesión correspondiente en ambos puertos.
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/4c95b6a3-97dd-4e5d-a685-0dfd502f7411) and click on Share -> Publish.
+## ¿Cómo es la redirección tras login?
 
-## Can I connect a custom domain to my Lovable project?
+- Después de login exitoso en `auth_system/login.php`, simplemente:
+  ```php
+  header("Location: http://localhost:8000");
+  exit;
+  ```
+- Eso lleva al sistema de ventas, que detectará la sesión activa y mostrará el dashboard.
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## MVC modular
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Cada módulo tiene su propia carpeta con:
+- `modelo/` (clases de acceso a datos)
+- `controlador/` (lógica de negocio)
+- `vista/` (HTML/PHP presentación)
+
+Ejemplo de la URL de productos (listar):
+```
+http://localhost:8000/modules/productos/controlador/ProductoController.php?action=list
+```
+
+---
+
+Esto es todo para iniciar tu proyecto. ¡Puedes expandir CRUDs y módulos según tus necesidades!
