@@ -17,7 +17,7 @@ cd auth_system
 php -S localhost:8001
 
 # Terminal 2: Sales system en puerto 8000
-cd ../sales_system
+cd sales_system
 php -S localhost:8000
 ```
 
