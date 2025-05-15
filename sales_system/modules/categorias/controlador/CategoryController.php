@@ -7,7 +7,7 @@ require_once "../../../auth_middleware.php";
 $action = $_GET["action"] ?? "index";
 $id = isset($_GET["id"]) ? intval($_GET["id"]) : null;
 
-// CRUD functions dentro de este controlador
+// CRUD functions
 function getCategories($conn) {
     $result = $conn->query("SELECT * FROM categorias");
     $categories = [];
@@ -46,8 +46,9 @@ function deleteCategory($conn, $id) {
 if ($action === "index") {
     $categorias = getCategories($conn);
     if (!isset($categorias) || !is_array($categorias)) {
-        $categorias = []; // asegura que la variable esté definida como array
+        $categorias = [];
     }
+    // Aseguramos que la variable exista AL INCLUIR la vista
     require("../vista/Index.php");
 } elseif ($action === "show" && $id) {
     $item = getCategory($conn, $id);

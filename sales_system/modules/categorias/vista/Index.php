@@ -14,17 +14,23 @@
       <tr><th>ID</th><th>Nombre</th><th>Acciones</th></tr>
     </thead>
     <tbody>
-      <?php foreach ($categorias as $cat): ?>
+      <?php if (isset($categorias) && is_array($categorias) && count($categorias) > 0): ?>
+        <?php foreach ($categorias as $cat): ?>
+          <tr>
+            <td><?= htmlspecialchars($cat->id) ?></td>
+            <td><?= htmlspecialchars($cat->nombre) ?></td>
+            <td>
+              <a href="CategoryController.php?action=show&id=<?= $cat->id ?>" class="btn btn-info btn-sm">Ver</a>
+              <a href="CategoryController.php?action=edit&id=<?= $cat->id ?>" class="btn btn-primary btn-sm">Editar</a>
+              <a href="CategoryController.php?action=delete&id=<?= $cat->id ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar?');">Eliminar</a>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      <?php else: ?>
         <tr>
-          <td><?= htmlspecialchars($cat->id) ?></td>
-          <td><?= htmlspecialchars($cat->nombre) ?></td>
-          <td>
-            <a href="CategoryController.php?action=show&id=<?= $cat->id ?>" class="btn btn-info btn-sm">Ver</a>
-            <a href="CategoryController.php?action=edit&id=<?= $cat->id ?>" class="btn btn-primary btn-sm">Editar</a>
-            <a href="CategoryController.php?action=delete&id=<?= $cat->id ?>" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar?');">Eliminar</a>
-          </td>
+          <td colspan="3" class="text-center">No hay categorías registradas.</td>
         </tr>
-      <?php endforeach; ?>
+      <?php endif; ?>
     </tbody>
   </table>
   <a href="../../../dashboard.php" class="btn btn-secondary mt-2">Volver al Dashboard</a>
