@@ -45,6 +45,9 @@ function deleteCategory($conn, $id) {
 // Routing
 if ($action === "index") {
     $categorias = getCategories($conn);
+    if (!isset($categorias) || !is_array($categorias)) {
+        $categorias = []; // asegura que la variable esté definida como array
+    }
     require("../vista/Index.php");
 } elseif ($action === "show" && $id) {
     $item = getCategory($conn, $id);
