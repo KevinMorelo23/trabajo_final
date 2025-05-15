@@ -14,7 +14,7 @@
   <form method="POST">
     <div class="mb-3">
       <label for="nombre" class="form-label">Nombre</label>
-      <input type="text" class="form-control" name="nombre" id="nombre" value="<?= htmlspecialchars($item['nombre'] ?? '') ?>" required>
+      <input type="text" class="form-control" name="nombre" id="nombre" value="<?= htmlspecialchars($item->nombre ?? '') ?>" required>
     </div>
     <button type="submit" class="btn btn-success">Guardar</button>
     <a href="CategoryController.php?action=index" class="btn btn-secondary">Volver</a>

@@ -7,9 +7,9 @@
 </head>
 <body class="bg-light">
 <div class="container mt-4">
-  <h2>Categoría #<?= htmlspecialchars($item["id"]) ?></h2>
-  <p><strong>Nombre:</strong> <?= htmlspecialchars($item["nombre"]) ?></p>
-  <a href="CategoryController.php?action=edit&id=<?= $item["id"] ?>" class="btn btn-primary">Editar</a>
+  <h2>Categoría #<?= htmlspecialchars($item->id) ?></h2>
+  <p><strong>Nombre:</strong> <?= htmlspecialchars($item->nombre) ?></p>
+  <a href="CategoryController.php?action=edit&id=<?= $item->id ?>" class="btn btn-primary">Editar</a>
   <a href="CategoryController.php?action=index" class="btn btn-secondary">Volver a la lista</a>
 </div>
 </body>
