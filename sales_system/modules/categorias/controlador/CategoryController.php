@@ -11,11 +11,14 @@ $id = isset($_GET["id"]) ? intval($_GET["id"]) : null;
 function getCategories($conn) {
     $result = $conn->query("SELECT * FROM categorias");
     $categories = [];
-    while ($row = $result->fetch_assoc()) {
-        $categories[] = new Category($row["id"], $row["nombre"]);
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $categories[] = new Category($row["id"], $row["nombre"]);
+        }
     }
     return $categories;
 }
+
 function getCategory($conn, $id) {
     $stmt = $conn->prepare("SELECT * FROM categorias WHERE id=?");
     $stmt->bind_param("i", $id);
@@ -45,10 +48,13 @@ function deleteCategory($conn, $id) {
 // Routing
 if ($action === "index") {
     $categorias = getCategories($conn);
+
+    // --- DEPURACIÓN: Descomenta la siguiente línea para ver el contenido de $categorias ---
+    // var_dump($categorias); exit;
+
     if (!isset($categorias) || !is_array($categorias)) {
         $categorias = [];
     }
-    // Aseguramos que la variable exista AL INCLUIR la vista
     require("../vista/Index.php");
 } elseif ($action === "show" && $id) {
     $item = getCategory($conn, $id);
